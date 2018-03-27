@@ -6,9 +6,7 @@ import android.service.notification.StatusBarNotification
 import android.text.TextUtils
 
 
-
-
-class NotificationListener : NotificationListenerService() {
+class SongNotificationListener : NotificationListenerService() {
 
     private val GOOGLE_MUSIC_SERVICE_PKG_NAME = "com.google.intelligence.sense"
     private val GOOGLE_MUSIC_SERVICE_CHANNEL_NAME = "com.google.intelligence.sense.ambientmusic.MusicNotificationChannel"
