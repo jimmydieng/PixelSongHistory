@@ -4,12 +4,23 @@ import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.text.TextUtils
+import me.jimmydieng.pixelsonghistory.PixelSongHistoryApplication
+import me.jimmydieng.pixelsonghistory.data.database.SongRepository
+import me.jimmydieng.pixelsonghistory.data.models.Song
+import javax.inject.Inject
 
 
 class SongNotificationListener : NotificationListenerService() {
 
     private val GOOGLE_MUSIC_SERVICE_PKG_NAME = "com.google.intelligence.sense"
     private val GOOGLE_MUSIC_SERVICE_CHANNEL_NAME = "com.google.intelligence.sense.ambientmusic.MusicNotificationChannel"
+
+    @Inject lateinit var songRepository: SongRepository
+
+    override fun onCreate() {
+        PixelSongHistoryApplication.appComponent(this).inject(this)
+        super.onCreate()
+    }
 
     override fun onListenerConnected() {
         process(*activeNotifications)
@@ -35,6 +46,6 @@ class SongNotificationListener : NotificationListenerService() {
     }
 
     private fun persistSongAsync(timeMillis: Long, songText: String) {
-
+        songRepository.saveSong(Song(timeMillis, songText))
     }
 }

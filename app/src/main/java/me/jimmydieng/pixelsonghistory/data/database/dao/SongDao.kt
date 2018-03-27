@@ -25,5 +25,5 @@ interface SongDao {
      * Save a batch of songs
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(newVersionInfos: List<Song>)
+    fun save(vararg songs: Song)
 }
