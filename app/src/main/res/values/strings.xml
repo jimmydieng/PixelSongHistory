@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Pixel Song History</string>
+    <string name="ask_notification_permissions">Ask Notification Permissions</string>
 </resources>

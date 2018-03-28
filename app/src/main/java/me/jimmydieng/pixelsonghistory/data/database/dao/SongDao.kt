@@ -18,8 +18,14 @@ interface SongDao {
     /**
      * Query all the song information on the device
      */
-    @Query("SELECT * FROM " + SongDao.TABLE_NAME + " WHERE songName = :songName")
-    fun getAll(songName: String): LiveData<List<Song>>
+    @Query("SELECT * FROM " + SongDao.TABLE_NAME)
+    fun getAll(): LiveData<List<Song>>
+
+    /**
+     * Query all the song information on the device
+     */
+    @Query("SELECT * FROM " + SongDao.TABLE_NAME + " WHERE timestamp = (SELECT MAX(timestamp) FROM " + SongDao.TABLE_NAME + ")")
+    fun getLastSong(): List<Song>
 
     /**
      * Save a batch of songs
