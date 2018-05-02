@@ -5,8 +5,9 @@ import android.view.View
 import android.widget.TextView
 import me.jimmydieng.pixelsonghistory.R
 import me.jimmydieng.pixelsonghistory.data.models.Song
-import java.text.DateFormat
-import java.text.SimpleDateFormat
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 
 
@@ -14,7 +15,9 @@ class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val songTitleView: TextView
     private val songTimeStampView: TextView
-    private val dateFormatter: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+    var formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy h:mm:ss a")
+            .withLocale(Locale.US)
+            .withZone(ZoneId.systemDefault())
 
     init {
         songTitleView = itemView.findViewById(R.id.song_title)
@@ -23,6 +26,7 @@ class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun setSong(song: Song) {
         songTitleView.text = song.songName
-        songTimeStampView.text = dateFormatter.format(Date(song.timeStamp))
+
+        songTimeStampView.text = formatter.format(Instant.ofEpochMilli(song.timeStamp).atZone(ZoneId.systemDefault()).toLocalDateTime())
     }
 }
