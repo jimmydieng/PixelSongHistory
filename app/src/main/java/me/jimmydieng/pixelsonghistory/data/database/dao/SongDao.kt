@@ -6,6 +6,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import me.jimmydieng.pixelsonghistory.data.models.Song
+import org.threeten.bp.LocalDateTime
 
 
 @Dao
@@ -16,10 +17,16 @@ interface SongDao {
     }
 
     /**
+     * Get all unique days stored
+     */
+    @Query("SELECT timeStamp FROM " + SongDao.TABLE_NAME + " GROUP BY strftime('%d', timeStamp / 1000, 'unixepoch')")
+    fun getAllUniqueDates(): LiveData<List<LocalDateTime>>
+
+    /**
      * Query all the song information on the device
      */
     @Query("SELECT * FROM " + SongDao.TABLE_NAME)
-    fun getAll(): LiveData<List<Song>>
+    fun getAllSongs(): LiveData<List<Song>>
 
     /**
      * Query all the song information on the device
