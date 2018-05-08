@@ -7,6 +7,9 @@ import android.text.TextUtils
 import me.jimmydieng.pixelsonghistory.PixelSongHistoryApplication
 import me.jimmydieng.pixelsonghistory.data.database.SongRepository
 import me.jimmydieng.pixelsonghistory.data.models.Song
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
 import javax.inject.Inject
 
 
@@ -46,6 +49,7 @@ class SongNotificationListener : NotificationListenerService() {
     }
 
     private fun persistSongAsync(timeMillis: Long, songText: String) {
-        songRepository.saveSong(Song(timeMillis, songText))
+        val timeStamp = LocalDateTime.ofInstant(Instant.ofEpochMilli(timeMillis), ZoneId.systemDefault())
+        songRepository.saveSong(Song(timeStamp, songText))
     }
 }
