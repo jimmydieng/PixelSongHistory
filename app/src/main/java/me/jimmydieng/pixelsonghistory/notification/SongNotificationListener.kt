@@ -4,12 +4,14 @@ import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.text.TextUtils
+import android.util.Log
 import me.jimmydieng.pixelsonghistory.PixelSongHistoryApplication
 import me.jimmydieng.pixelsonghistory.data.database.SongRepository
 import me.jimmydieng.pixelsonghistory.data.models.Song
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
+import org.threeten.bp.ZoneOffset
 import javax.inject.Inject
 
 
@@ -50,6 +52,7 @@ class SongNotificationListener : NotificationListenerService() {
 
     private fun persistSongAsync(timeMillis: Long, songText: String) {
         val timeStamp = LocalDateTime.ofInstant(Instant.ofEpochMilli(timeMillis), ZoneId.systemDefault())
+
         songRepository.saveSong(Song(timeStamp, songText))
     }
 }

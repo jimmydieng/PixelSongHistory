@@ -19,5 +19,5 @@ class LocalDateTimeTypeConverter {
     }
 
     @TypeConverter
-    fun dateToTimestamp(date: LocalDateTime?): Long? = date?.toEpochSecond(ZoneOffset.UTC)
+    fun dateToTimestamp(date: LocalDateTime?): Long? = date?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
 }
