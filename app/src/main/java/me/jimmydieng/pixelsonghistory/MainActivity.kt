@@ -7,6 +7,7 @@ import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import me.jimmydieng.pixelsonghistory.data.database.dao.SongDao
@@ -14,6 +15,8 @@ import me.jimmydieng.pixelsonghistory.songlist.adapter.SongsListAdapter
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+
+    private val LOG_TAG = "MainActivity"
 
     @Inject lateinit var songDao: SongDao
 
@@ -28,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = songAdapter
 
-        songDao.getAll()
+        songDao.getAllSongs()
                 .observe(this, Observer {
                     it?.let{
                         songAdapter.setSongs(it)

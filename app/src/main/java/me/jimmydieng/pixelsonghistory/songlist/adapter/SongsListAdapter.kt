@@ -5,28 +5,78 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import me.jimmydieng.pixelsonghistory.R
 import me.jimmydieng.pixelsonghistory.data.models.Song
+import org.threeten.bp.LocalDate
 
 
-class SongsListAdapter : RecyclerView.Adapter<SongViewHolder>() {
+class SongsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val songs: MutableList<Song> = mutableListOf()
+    private val DATE_ITEM_TYPE: Int = 1
+    private val SONG_ITEM_TYPE: Int = 2
+
+    private val songListItems: MutableList<SongListItem> = mutableListOf()
+    private val songHistory: MutableMap<LocalDate, MutableList<Song>> = mutableMapOf()
 
     fun setSongs(songs: List<Song>) {
-        this.songs.clear()
-        this.songs.addAll(songs)
+        songs.forEach({
+            val songDate = it.timeStamp.toLocalDate()
+            if (songDate !in songHistory) {
+                songHistory[songDate] = mutableListOf()
+            }
+            songHistory[songDate]!!.add(it)
+        })
+
+        for ((date, songsForDate) in songHistory) {
+            songListItems.add(DateItem(date))
+            songsForDate.forEach {
+                songListItems.add(SongItem(it))
+            }
+        }
 
         // TODO: Rough hack for now
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = songs.size
+    override fun getItemCount(): Int = songListItems.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.song_list_item, parent, false)
-        return SongViewHolder(view)
+    override fun getItemViewType(position: Int): Int {
+        return when (songListItems[position]) {
+            is SongItem -> SONG_ITEM_TYPE
+            is DateItem -> DATE_ITEM_TYPE
+        }
     }
 
-    override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
-        holder.setSong(songs[position])
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        when (viewType) {
+            DATE_ITEM_TYPE -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.date_list_item, parent, false)
+                return DateViewHolder(view)
+            }
+            SONG_ITEM_TYPE -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.song_list_item, parent, false)
+                return SongViewHolder(view)
+            }
+            else -> {
+                throw IllegalArgumentException("Unknown Type: $viewType$")
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val songListItem = songListItems[position]
+        when (holder) {
+            is DateViewHolder -> {
+                if (songListItem is DateItem) {
+                    holder.setDate(songListItem.localDate)
+                    return
+                }
+            }
+            is SongViewHolder -> {
+                if (songListItem is SongItem) {
+                    holder.setSong(songListItem.song)
+                    return
+                }
+            }
+        }
+        throw IllegalArgumentException("Unknown Type: $songListItem$ with Holder: $holder$")
     }
 }
