@@ -14,7 +14,7 @@ class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val songTitleView: TextView
     private val songTimeStampView: TextView
-    private var formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy h:mm:ss a")
+    private var formatter = DateTimeFormatter.ofPattern("h:mm:ss a")
             .withLocale(Locale.US)
             .withZone(ZoneId.systemDefault())
 
