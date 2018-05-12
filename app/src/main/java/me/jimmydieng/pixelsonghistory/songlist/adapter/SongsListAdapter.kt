@@ -17,6 +17,9 @@ class SongsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val songHistory: MutableMap<LocalDate, MutableList<Song>> = mutableMapOf()
 
     fun setSongs(songs: List<Song>) {
+        songListItems.clear()
+        songHistory.clear()
+
         songs.forEach({
             val songDate = it.timeStamp.toLocalDate()
             if (songDate !in songHistory) {
