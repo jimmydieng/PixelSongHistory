@@ -25,7 +25,7 @@ interface SongDao {
     /**
      * Query all the song information on the device
      */
-    @Query("SELECT * FROM " + SongDao.TABLE_NAME)
+    @Query("SELECT * FROM " + SongDao.TABLE_NAME + " ORDER BY timeStamp DESC")
     fun getAllSongs(): LiveData<List<Song>>
 
     /**
